@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "workspaces": ["frontend"],
-  "main": "index.js",
+  "main": "frontend/src/index.js",
   "scripts": {
     "build": "npm run build --prefix frontend",
     "start": "start-server -s ./frontend/build",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "cd frontend && npm ci"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Andrii Veduta",
   "license": "ISC",
