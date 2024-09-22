@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="h-100" lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
@@ -26,18 +26,22 @@
     -->
     <title>React App</title>
   </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+  <body class="h-100 bg-light">
+    <div class="h-100">
+      <div class="h-100" id="chat">
+        <div class="d-flex flex-column h-100">
+          <nav class="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
+            <div class="container">
+              <a class="navbar-brand" href="/">Hexlet Chat</a>
+            </div>
+          </nav>
+          <div class="container-fluid h-100">
+            <div class="row justify-content-center align-content-center h-100" id="root">
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
