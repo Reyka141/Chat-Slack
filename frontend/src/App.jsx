@@ -1,13 +1,16 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { PageOne, PageTwo, SignupForm } from './Components/Pages';
+import { Login } from './pages/Login';
+import { Home } from './pages/Home';
+import { NotFound } from './pages/NotFound';
 
 function App() {
   return (
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<PageOne />} />
-          <Route path="/login" element={<SignupForm />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
   );
