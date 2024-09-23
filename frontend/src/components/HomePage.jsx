@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { Button, Container, Row, Col, Nav } from 'react-bootstrap';
 
-import { getChannels, addChannel, removeChannel } from '../services/channelsApi.js';
+import { getChannels } from '../services/channelsApi.js';
 
 import { MessageBox } from './MessageBox.jsx'
 
 export const HomePage = () => {
   const [activeChannel, setActiveChannel] = useState({ id: '1', name: 'general' });
-  const { data, error, isLoading, refetch } = getChannels();
-  const [remove] = removeChannel();
-  const [sendTask] = addChannel();
+  const { data, isLoading } = getChannels();
+
 
   
   if (isLoading) {
