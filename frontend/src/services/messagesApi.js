@@ -5,9 +5,10 @@ export const messagesApi = createApi({
   baseQuery: fetchBaseQuery({ 
     baseUrl: '/api/v1/messages',
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem('userId'); 
+      const token = localStorage.getItem('userId'); // Получаем токен из localStorage при каждом запросе
 
       if (token) {
+        // Добавляем токен в заголовки запроса
         headers.set('Authorization', `Bearer ${token}`);
       }
 
