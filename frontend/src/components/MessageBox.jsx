@@ -9,26 +9,25 @@ export const MessageBox = ({ activeChannel }) => {
   const { data, isLoading, } = getMessages();
   const [messages, setMessages] = useState([]);
   const inputEl = useRef();
-  const messagesContainer = useRef();
+  const messagesEndRef = useRef();
   const [sendMessage] = addMessage();
 
   const scrollToBottom = () => {
-    if (messagesContainer.current) {
-      messagesContainer.current.scrollTop = messagesContainer.current.scrollHeight;
-    }
+    messagesEndRef.current?.scrollIntoView();
   };
-  
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, activeChannel]);
+
   useEffect(() => {
     if (!isLoading) {
       inputEl.current.focus();
-      scrollToBottom();
     }
   }, [activeChannel, isLoading]);
 
   useEffect(() => {
     if (data) {
       setMessages(data);
-      scrollToBottom();
     }
     
   }, [data]);
@@ -37,7 +36,6 @@ export const MessageBox = ({ activeChannel }) => {
     // Обработчик получения сообщений от сервера
     socket.on('newMessage', (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
-      scrollToBottom();
     });
 
     return () => {
@@ -72,15 +70,24 @@ export const MessageBox = ({ activeChannel }) => {
           <b>{`# ${activeChannel.name}`}</b>
         </p>
         <span className='text-muted'>
-          {`${countMessage} сообений`}
+          {`${countMessage} сообщений`}
         </span>
       </div>
-      <div id="messages-box" className='chat-messages overflow-auto px-5' ref={messagesContainer}>
-        {messagesFromChannel.map(({ id, body, username }) => (
-          <div key={id}  className='text-break mb-2'>
-            <b>{username}</b>: {body}
-          </div>
-        ))}
+      <div id="messages-box" className='chat-messages overflow-auto px-5'>
+        {messagesFromChannel.map(({ id, body, username }, index, array) => {
+          if (index === array.length - 1) {
+            return (
+              <div key={id}  className='text-break mb-2' ref={messagesEndRef}>
+                <b>{username}</b>: {body}
+              </div>
+            );
+          }
+          return (
+            <div key={id}  className='text-break mb-2'>
+              <b>{username}</b>: {body}
+            </div>
+          );
+        })}
       </div>
       <div className='mt-auto px-5 py-3'>
         <Form noValidate className='py-1 border rounded-2' onSubmit={formik.handleSubmit}>
