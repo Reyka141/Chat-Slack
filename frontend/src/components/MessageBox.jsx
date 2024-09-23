@@ -9,15 +9,14 @@ export const MessageBox = ({ activeChannel }) => {
   const { data, isLoading, } = getMessages();
   const [messages, setMessages] = useState([]);
   const inputEl = useRef();
-  const massagesContainer = useRef();
-  const [sendMassage] = addMessage();
+  const messagesContainer = useRef();
+  const [sendMessage] = addMessage();
 
   const scrollToBottom = () => {
-    if (massagesContainer.current) {
-      massagesContainer.current.scrollTop = massagesContainer.current.scrollHeight;
+    if (messagesContainer.current) {
+      messagesContainer.current.scrollTop = messagesContainer.current.scrollHeight;
     }
   };
-  scrollToBottom();
   
   useEffect(() => {
     if (!isLoading) {
@@ -29,6 +28,7 @@ export const MessageBox = ({ activeChannel }) => {
   useEffect(() => {
     if (data) {
       setMessages(data);
+      scrollToBottom();
     }
     
   }, [data]);
@@ -37,6 +37,7 @@ export const MessageBox = ({ activeChannel }) => {
     // Обработчик получения сообщений от сервера
     socket.on('newMessage', (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
+      scrollToBottom();
     });
 
     return () => {
@@ -53,7 +54,7 @@ export const MessageBox = ({ activeChannel }) => {
       const newMessage = { body: message, channelId: activeChannel.id, username };
       formik.values.message = '';
       inputEl.current.focus();
-      sendMassage(newMessage);
+      sendMessage(newMessage);
     },
   });
 
@@ -74,7 +75,7 @@ export const MessageBox = ({ activeChannel }) => {
           {`${countMessage} сообений`}
         </span>
       </div>
-      <div id="messages-box" className='chat-messages overflow-auto px-5' ref={massagesContainer}>
+      <div id="messages-box" className='chat-messages overflow-auto px-5' ref={messagesContainer}>
         {messagesFromChannel.map(({ id, body, username }) => (
           <div key={id}  className='text-break mb-2'>
             <b>{username}</b>: {body}
@@ -86,7 +87,7 @@ export const MessageBox = ({ activeChannel }) => {
           <Form.Group className='input-group has-validation'>
             <Form.Control 
               ref={inputEl}
-              autoСomplete="off"
+              autoComplete="off"
               type="input"
               placeholder="Введите сообщение..." 
               id="message"
