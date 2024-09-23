@@ -28,6 +28,7 @@ export const LoginPage = () => {
       try {
         const res = await axios.post(routes.loginPath(), values);
         localStorage.setItem('userId', res.data.token);
+        localStorage.setItem('username', res.data.username);
         auth.logIn();
         navigate('/');
       } catch (err) {
