@@ -6,7 +6,7 @@ import socket from '../socket';
 import { getMessages, addMessage } from '../services/messagesApi.js';
 
 export const MessageBox = ({ activeChannel }) => {
-  const { data, error, isLoading, } = getMessages();
+  const { data, isLoading, } = getMessages();
   const [messages, setMessages] = useState([]);
   const inputEl = useRef();
   const massagesContainer = useRef();
@@ -86,7 +86,7 @@ export const MessageBox = ({ activeChannel }) => {
           <Form.Group className='input-group has-validation'>
             <Form.Control 
               ref={inputEl}
-              autocomplete="off"
+              autoСomplete="off"
               type="input"
               placeholder="Введите сообщение..." 
               id="message"
