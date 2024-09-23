@@ -1,36 +1,47 @@
-import axios from 'axios';
-import { createSlice, createEntityAdapter, createAsyncThunk } from '@reduxjs/toolkit';
-import routes from '../routes.js';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const channelsAdapter = createEntityAdapter();
+export const channelsApi = createApi({
+  reducerPath: 'tasks',
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: '/api/v1/channels',
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem('userId'); // Получаем токен из localStorage при каждом запросе
 
-const initialState = channelsAdapter.getInitialState();
+      if (token) {
+        // Добавляем токен в заголовки запроса
+        headers.set('Authorization', `Bearer ${token}`);
+      }
 
-export const fetchChannels = createAsyncThunk(
-  'tasks/fetchChannels',
-  async () => {
-    const token = localStorage.getItem('userId');
-    const response = await axios.get(routes.channelsPath(), { 
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  },
-);
-
-const channelsSlice = createSlice({
-  name: 'channels',
-  initialState,
-  reducers: {
-    addChannel: channelsAdapter.addOne,
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchChannels.fulfilled, channelsAdapter.addMany);
-  },
+      return headers; // Возвращаем изменённые заголовки
+    },
+   }),
+  endpoints: (builder) => ({
+    getChannels: builder.query({
+      query: () => '',
+    }),
+    addChannel: builder.mutation({
+      query: (text) => ({
+        method: 'POST',
+        body: text,
+      }),
+    }),
+    removeChannel: builder.mutation({
+      query: (id) => ({
+        url: id,
+        method: 'DELETE',
+      }),
+    }),
+  }),
 });
 
-export const { action } = channelsSlice;
-export const selectors = channelsAdapter.getSelectors((state) => state.channels);
-export default channelsSlice.reducer;
+const {
+  useGetChannelsQuery,
+  useAddChannelMutation,
+  useRemoveChannelMutation,
+} = channelsApi;
+
+export {
+  useGetChannelsQuery as getChannels,
+  useAddChannelMutation as addChannel,
+  useRemoveChannelMutation as removeChannel,
+};
