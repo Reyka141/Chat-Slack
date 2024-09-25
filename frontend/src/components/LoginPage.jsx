@@ -1,10 +1,9 @@
-import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useFormik } from 'formik';
 import { Button, Form, Container, Card, Row, Col, Image } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/index.jsx';
-import routes from '../routes.js';
+import { loginUser } from '../services/userApi.js';
 
 
 export const LoginPage = () => {
@@ -12,7 +11,7 @@ export const LoginPage = () => {
   const [authFailed, setAuthFailed] = useState(false);
   const inputRef = useRef();
   const navigate = useNavigate();
-
+  const [login] = loginUser();
   useEffect(() => {
     inputRef.current.focus();
   }, []);
@@ -23,22 +22,15 @@ export const LoginPage = () => {
       password: '',
     },
     onSubmit: async (values) => {
-      setAuthFailed(false);
-
+      const data = { username: values.username, password: values.password };
       try {
-        const res = await axios.post(routes.loginPath(), values);
-        localStorage.setItem('userId', res.data.token);
-        localStorage.setItem('username', res.data.username);
+        const { token, username } = await login(data).unwrap();
+        localStorage.setItem('userId', token);
+        localStorage.setItem('username', username);
         auth.logIn();
         navigate('/');
       } catch (err) {
-        formik.setSubmitting(false);
-        if (err.isAxiosError && err.response.status === 401) {
-          setAuthFailed(true);
-          inputRef.current.select();
-          return;
-        }
-        throw err;
+        setAuthFailed(true);
       }
     },
   });
@@ -88,8 +80,11 @@ export const LoginPage = () => {
                 </Button>
               </Form>
             </Card.Body>
-            <Card.Footer>
-              
+            <Card.Footer className='p-4'>
+              <div className='text-center'>
+                <span>Нет аккаунта?</span>
+                <a href="/signup">Регистрация</a>
+              </div>
             </Card.Footer>
           </Card>
         </Col>
