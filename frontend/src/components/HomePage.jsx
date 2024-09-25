@@ -7,7 +7,6 @@ import { getChannels } from '../services/channelsApi.js';
 import { MessageBox } from './MessageBox.jsx'
 import getModal from '../modals/index.js';
 import socket from '../socket';
-import { t } from 'i18next';
 
 const renderModal = ({ modalInfo, hideModal, channels, setActiveChannel }) => {
   if (!modalInfo.type) {
@@ -27,7 +26,7 @@ export const HomePage = () => {
   const hideModal = () => setModalInfo({ type: null, item: null });
   const showModal = (type, item = null) => setModalInfo({ type, item });
   const lastCreatChannel = useRef();
-  const { i } = useTranslation();
+  const { t } = useTranslation();
 
 
   const scrollToBottom = () => {
