@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef} from 'react';
 import { Button, Container, Row, Col, Nav, Dropdown, ButtonGroup  } from 'react-bootstrap';
 import update from 'immutability-helper';
 
-import { getChannels} from '../services/channelsApi.js';
+import { getChannels } from '../services/channelsApi.js';
 import { MessageBox } from './MessageBox.jsx'
 import getModal from '../modals/index.js';
 import socket from '../socket';
