@@ -5,19 +5,9 @@ import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { signUpUser } from '../services/userApi.js';
 import useAuth from '../hooks/index.jsx';
+import { useTranslation } from 'react-i18next';
 
-const signupSchema = Yup.object().shape({
-  username: Yup.string()
-    .transform((value) => value.replace(/ {1,}/g, ''))
-    .min(3, 'От 3 до 20 символов')
-    .max(20, 'От 3 до 20 символов')
-    .required('Обязательное поле'),
-  password: Yup.string()
-    .min(6, 'Не менее 6 символов')
-    .required('Обязательное поле'),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать')
-});
+
 
 export const SignUpPage = () => {
   const navigate = useNavigate();
@@ -26,6 +16,21 @@ export const SignUpPage = () => {
     { error: signUpError, isLoading: isSignUp },
   ] = signUpUser();
   const auth = useAuth();
+  const { t } = useTranslation();
+
+  const signupSchema = Yup.object().shape({
+    username: Yup.string()
+      .transform((value) => value.replace(/ {1,}/g, ''))
+      .min(3, t('loginAndSignUp.errors.validation.nameSymbols'))
+      .max(20, t('loginAndSignUp.errors.validation.nameSymbols'))
+      .required(t('loginAndSignUp.errors.validation.required')), 
+    password: Yup.string()
+      .min(6, t('loginAndSignUp.errors.validation.pasMinSumbols'))
+      .required(t('loginAndSignUp.errors.validation.required')), 
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], t('loginAndSignUp.errors.validation.confirmPassword'))
+      .required(t('loginAndSignUp.errors.validation.required')),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -45,7 +50,7 @@ export const SignUpPage = () => {
         navigate('/');
       } catch (err) {
         if (err.status === 409) {
-          formik.errors.username = 'Такой пользователь уже существует';
+          formik.errors.username = t('loginAndSignUp.errors.validation.status409');
         }
       }
     },
@@ -60,7 +65,7 @@ export const SignUpPage = () => {
                 <Image src='/images/avatar_1.6084447160acc893a24d.jpg' roundedCircle alt='Регистрация' />
               </div>
               <Form className="w-50" onSubmit={formik.handleSubmit}>
-                <h1 className="text-center mb-4">Регистрация</h1>
+                <h1 className="text-center mb-4">{t('loginAndSignUp.headingSignUp')}</h1>
                 <Form.Floating  className="mb-3">
                   <Form.Control 
                     type="username"
@@ -74,7 +79,7 @@ export const SignUpPage = () => {
                     value={formik.values.username}
                     className={formik.errors.username && 'is-invalid'}
                   />
-                  <Form.Label htmlFor='username'>Имя пользователя</Form.Label>
+                  <Form.Label htmlFor='username'>{t('loginAndSignUp.usernameSignUp')}</Form.Label>
                   <Form.Control.Feedback type="invalid">{formik.errors.username}</Form.Control.Feedback>
                 </Form.Floating>
 
@@ -90,7 +95,7 @@ export const SignUpPage = () => {
                       value={formik.values.password}
                       className={formik.errors.password && 'is-invalid'}
                   />
-                  <Form.Label htmlFor='password'>Пароль</Form.Label>
+                  <Form.Label htmlFor='password'>{t('loginAndSignUp.password')}</Form.Label>
                   <Form.Control.Feedback type="invalid">
                     {formik.errors.password}
                   </Form.Control.Feedback>
@@ -107,13 +112,13 @@ export const SignUpPage = () => {
                       value={formik.values.confirmPassword}
                       className={formik.errors.confirmPassword && 'is-invalid'}
                   />
-                  <Form.Label htmlFor='confirmPassword'>Подтердите пароль</Form.Label>
+                  <Form.Label htmlFor='confirmPassword'>{t('loginAndSignUp.confirmPassword')}</Form.Label>
                   <Form.Control.Feedback type="invalid">
                     {formik.errors.confirmPassword}
                   </Form.Control.Feedback>
                 </Form.Floating>
                 <Button variant="outline-primary" type="submit" className='w-100 mb-3'>
-                  Войти
+                  {t('loginAndSignUp.signupBtn')}
                 </Button>
               </Form>
             </Card.Body>

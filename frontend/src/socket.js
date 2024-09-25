@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-const SOCKET_URL = 'https://chat-slack-js00.onrender.com/';  // Замените на URL вашего сервера
+const SOCKET_URL = 'http://localhost:3000/';  // Замените на URL вашего сервера
 
 const socket = io(SOCKET_URL);
 

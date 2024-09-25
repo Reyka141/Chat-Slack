@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import { Modal, Form, Button } from 'react-bootstrap';
 import * as Yup from 'yup';
 import { addChannel } from '../services/channelsApi.js';
+import { useTranslation } from 'react-i18next';
 
 const generateOnSubmit = ({ onHide, setActiveChannel }, sendChannel,) => async (values) => {
   const newChannel  = { name: values.name };
@@ -15,14 +16,15 @@ const Add = (props) => {
   const { onHide, channels } = props;
   const channelsName = channels.map(({ name }) => name);
   const [sendChannel] = addChannel();
+  const { t } = useTranslation();
 
   const channelSchema = Yup.object().shape({
     name: Yup.string()
       .transform((value) => value.replace(/ {1,}/g, ''))
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
-      .required('Обязательное поле')
-      .test('is-unique', 'Должно быть уникальным', function (value) {
+      .min(3, t('modal.errors.validation.minMax'))
+      .max(20, t('modal.errors.validation.minMax'))
+      .required(t('modal.errors.validation.required'))
+      .test('is-unique', t('modal.errors.validation.unique'), function (value) {
         return !channelsName.includes(value); // Проверка на дублирование
       }),
   });
@@ -40,7 +42,7 @@ const Add = (props) => {
   return (
     <Modal show>
       <Modal.Header closeButton onHide={onHide}>
-        <Modal.Title>Добовить канал</Modal.Title>
+        <Modal.Title>{t('modal.add.header')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -58,12 +60,12 @@ const Add = (props) => {
               id='name'
               className={`mb-2 ${f.errors.name && 'is-invalid'}`}
             />
-            <Form.Label className='visually-hidden'>Имя канала</Form.Label>
+            <Form.Label className='visually-hidden'>{t('modal.add.name')}</Form.Label>
             <Form.Control.Feedback type="invalid">{f.errors.name}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className='d-flex justify-content-end'>
-            <Button type='button' variant='secondary' onClick={onHide} className='me-2'>Отменить</Button>
-            <Button type='submit'>Отправить</Button>
+            <Button type='button' variant='secondary' onClick={onHide} className='me-2'>{t('modal.cancelBtn')}</Button>
+            <Button type='submit'>{t('modal.submitBtn')}</Button>
           </Form.Group>
         </form>
       </Modal.Body>

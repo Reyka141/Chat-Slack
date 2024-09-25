@@ -8,6 +8,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { Button, Navbar, Container } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import AuthContext from '../contexts/index.jsx';
 import useAuth from '../hooks/index.jsx';
 
@@ -58,25 +59,25 @@ const LoginRoute = ({ children }) => {
   );
 };
 
-const AuthButton = () => {
-  const auth = useAuth();
-
-  return (
-    auth.loggedIn
-      ? <Button onClick={auth.logOut}>Выйти</Button>
-      : null
-  );
-};
-
-
 const App = () => {
+  const { t } = useTranslation();
+  const AuthButton = () => {
+    const auth = useAuth();
+  
+    return (
+      auth.loggedIn
+        ? <Button onClick={auth.logOut}>{t('navbar.logOutBtn')}</Button>
+        : null
+    );
+  };
+
   return (
     <AuthProvider>
       <Router>
       <div className='d-flex flex-column h-100'>
         <Navbar bg="white" expand="lg" className='shadow-sm'>
           <Container>
-            <Navbar.Brand as={Link} to="/">Hexlet Chat</Navbar.Brand>
+            <Navbar.Brand as={Link} to="/">{t('navbar.homeLink')}</Navbar.Brand>
             <AuthButton />
           </Container>
         </Navbar>
