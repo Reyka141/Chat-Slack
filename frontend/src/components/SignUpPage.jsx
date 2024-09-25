@@ -7,8 +7,6 @@ import { signUpUser } from '../services/userApi.js';
 import useAuth from '../hooks/index.jsx';
 import { useTranslation } from 'react-i18next';
 
-
-
 export const SignUpPage = () => {
   const navigate = useNavigate();
   const [
