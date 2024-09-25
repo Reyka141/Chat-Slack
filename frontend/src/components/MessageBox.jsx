@@ -5,8 +5,8 @@ import socket from '../socket';
 
 import { getMessages, addMessage } from '../services/messagesApi.js';
 
-export const MessageBox = ({ activeChannel }) => {
-  const { data, isLoading, } = getMessages();
+export const MessageBox = ({ activeChannel, channels }) => {
+  const { data, isLoading, refetch } = getMessages();
   const [messages, setMessages] = useState([]);
   const inputEl = useRef();
   const messagesEndRef = useRef();
@@ -15,6 +15,11 @@ export const MessageBox = ({ activeChannel }) => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView();
   };
+
+  useEffect(() => {
+    refetch();
+  }, [channels, refetch]);
+
   useEffect(() => {
     scrollToBottom();
   }, [messages, activeChannel]);
@@ -29,7 +34,6 @@ export const MessageBox = ({ activeChannel }) => {
     if (data) {
       setMessages(data);
     }
-    
   }, [data]);
 
   useEffect(() => {
