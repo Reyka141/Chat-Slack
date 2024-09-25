@@ -28,7 +28,6 @@ export const HomePage = () => {
   const lastCreatChannel = useRef();
   const { t } = useTranslation();
 
-
   const scrollToBottom = () => {
     lastCreatChannel.current?.scrollIntoView();
   };
