@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useFormik } from 'formik';
 import { Button, Form, Container, Card, Row, Col, Image } from 'react-bootstrap';
 import * as Yup from 'yup';
@@ -16,6 +16,11 @@ export const SignUpPage = () => {
     { error: signUpError, isLoading: isSignUp },
   ] = signUpUser();
   const auth = useAuth();
+  const inputRef = useRef();
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [])
   const { t } = useTranslation();
 
   const signupSchema = Yup.object().shape({
@@ -64,7 +69,7 @@ export const SignUpPage = () => {
               <div>
                 <Image src='/images/avatar_1.6084447160acc893a24d.jpg' roundedCircle alt='Регистрация' />
               </div>
-              <Form className="w-50" onSubmit={formik.handleSubmit}>
+              <Form noValidate className="w-50" onSubmit={formik.handleSubmit}>
                 <h1 className="text-center mb-4">{t('loginAndSignUp.headingSignUp')}</h1>
                 <Form.Floating  className="mb-3">
                   <Form.Control 
@@ -74,6 +79,7 @@ export const SignUpPage = () => {
                     id="username"
                     name="username"
                     autoComplete="new-username"
+                    ref={inputRef}
                     disabled={formik.isSubmitting}
                     onChange={formik.handleChange}
                     value={formik.values.username}
