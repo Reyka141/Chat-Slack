@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom';
 import { Button, Navbar, Container } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { getChannels } from '../services/channelsApi.js';
 import AuthContext from '../contexts/index.jsx';
 import useAuth from '../hooks/index.jsx';
 
@@ -20,6 +21,7 @@ import { SignUpPage } from './SignUpPage';
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
+  const { error } = getChannels();
 
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
@@ -29,10 +31,11 @@ const AuthProvider = ({ children }) => {
   };
   useEffect(() => {
     const userId = localStorage.getItem('userId');
-    if (userId) {
+    if (userId && !error) {
       setLoggedIn(true);
+      
     }
-  }, []);
+  }, [error]);
 
   return (
     <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
