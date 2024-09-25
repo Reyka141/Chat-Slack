@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -8,12 +8,14 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { Button, Navbar, Container } from 'react-bootstrap';
+import AuthContext from '../contexts/index.jsx';
+import useAuth from '../hooks/index.jsx';
 
 import { LoginPage } from './LoginPage';
 import { HomePage } from './HomePage';
 import { NotFoundPage } from './NotFoundPage';
-import AuthContext from '../contexts/index.jsx';
-import useAuth from '../hooks/index.jsx';
+import { SignUpPage } from './SignUpPage';
+
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -21,8 +23,15 @@ const AuthProvider = ({ children }) => {
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
     localStorage.removeItem('userId');
+    localStorage.removeItem('username');
     setLoggedIn(false);
   };
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      setLoggedIn(true);
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
@@ -51,12 +60,11 @@ const LoginRoute = ({ children }) => {
 
 const AuthButton = () => {
   const auth = useAuth();
-  const location = useLocation();
 
   return (
     auth.loggedIn
-      ? <Button onClick={auth.logOut}>Log out</Button>
-      : <Button as={Link} to="/login" state={{ from: location }}>Log in</Button>
+      ? <Button onClick={auth.logOut}>Выйти</Button>
+      : null
   );
 };
 
@@ -82,6 +90,11 @@ const App = () => {
             <Route path="/login" element={(
                 <LoginRoute>
                   <LoginPage />
+                </LoginRoute>
+              )}  />
+              <Route path="/signup" element={(
+                <LoginRoute>
+                  <SignUpPage />
                 </LoginRoute>
               )}  />
             <Route path="*" element={<NotFoundPage />} />
