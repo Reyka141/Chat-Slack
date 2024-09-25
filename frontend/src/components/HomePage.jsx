@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef} from 'react';
 import { Button, Container, Row, Col, Nav, Dropdown, ButtonGroup  } from 'react-bootstrap';
-import { useImmer } from 'use-immer';
 import update from 'immutability-helper';
 
 import { getChannels} from '../services/channelsApi.js';
