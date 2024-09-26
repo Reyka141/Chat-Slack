@@ -35,7 +35,10 @@ const Add = (props) => {
 
   const channelSchema = Yup.object().shape({
     name: Yup.string()
-      .transform((value) => value.replace(/ {1,}/g, ''))
+      .transform((value) => {
+        const trim = value.trim();
+        return trim.replace(/ {2,}/g, ' ');
+      })
       .min(3, t('modal.errors.validation.minMax'))
       .max(20, t('modal.errors.validation.minMax'))
       .required(t('modal.errors.validation.required'))
