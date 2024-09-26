@@ -19,7 +19,12 @@ const renderModal = ({
     return null;
   }
   const Component = getModal(modalInfo.type);
-  return <Component modalInfo={modalInfo} onHide={hideModal} channels={channels} setActiveChannel={setActiveChannel} />;
+  return <Component 
+    modalInfo={modalInfo} 
+    onHide={hideModal} 
+    channels={channels} 
+    setActiveChannel={setActiveChannel} 
+  />;
 };
 
 const defaultChannel = { id: '1', name: 'general' };
