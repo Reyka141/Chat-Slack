@@ -94,7 +94,7 @@ const Rename = (props) => {
               id='name'
               className={`mb-2 ${f.errors.name && 'is-invalid'}`}
             />
-            <Form.Label className='visually-hidden'>{t('modal.name')}</Form.Label>
+            <Form.Label className='visually-hidden' htmlFor='name'>{t('modal.name')}</Form.Label>
             <Form.Control.Feedback type="invalid">{f.errors.name}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className='d-flex justify-content-end'>
