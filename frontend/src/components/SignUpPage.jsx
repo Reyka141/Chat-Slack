@@ -11,10 +11,7 @@ import useAuth from '../hooks/index.jsx';
 
 export default SignUpPage = () => {
   const navigate = useNavigate();
-  const [
-    signUp,
-    { error: signUpError, isLoading: isSignUp },
-  ] = signUpUser();
+  const [signUp] = signUpUser();
   const auth = useAuth();
   const inputRef = useRef();
 
