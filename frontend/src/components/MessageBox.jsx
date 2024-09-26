@@ -121,6 +121,7 @@ export const MessageBox = ({ activeChannel, channels }) => {
               ref={inputEl}
               autoComplete="off"
               type="input"
+              aria-label="Новое сообщение"
               placeholder="Введите сообщение..." 
               id="message"
               name="message"
