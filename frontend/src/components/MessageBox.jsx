@@ -3,8 +3,14 @@ import { useFormik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import filter from 'leo-profanity';
 import socket from '../socket';
 import { getMessages, addMessage } from '../services/messagesApi';
+
+filter.clearList();
+filter.add(filter.getDictionary('en'));
+filter.add(filter.getDictionary('fr'));
+filter.add(filter.getDictionary('ru'));
 
 export const MessageBox = ({ activeChannel, channels }) => {
   const { t } = useTranslation();
@@ -86,7 +92,7 @@ export const MessageBox = ({ activeChannel, channels }) => {
     <div className='d-flex flex-column h-100'>
       <div className='bg-light mb-4 p-3 shadow-sm small'>
         <p className='m-0'>
-          <b>{`# ${activeChannel.name}`}</b>
+          <b>{`# ${filter.clean(activeChannel.name)}`}</b>
         </p>
         <span className='text-muted'>
           {t('homePage.messageCount.keyWithCount', { count: countMessage })}
@@ -97,13 +103,13 @@ export const MessageBox = ({ activeChannel, channels }) => {
           if (index === array.length - 1) {
             return (
               <div key={id}  className='text-break mb-2' ref={messagesEndRef}>
-                <b>{username}</b>: {body}
+                <b>{username}</b>: {filter.clean(body)}
               </div>
             );
           }
           return (
             <div key={id}  className='text-break mb-2'>
-              <b>{username}</b>: {body}
+              <b>{username}</b>: {filter.clean(body)}
             </div>
           );
         })}
