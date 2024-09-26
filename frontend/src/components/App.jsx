@@ -12,12 +12,18 @@ import { useTranslation } from 'react-i18next';
 import { getChannels } from '../services/channelsApi.js';
 import AuthContext from '../contexts/index.jsx';
 import useAuth from '../hooks/index.jsx';
+import { Provider, ErrorBoundary } from '@rollbar/react';
 
 import { LoginPage } from './LoginPage';
 import { HomePage } from './HomePage';
 import { NotFoundPage } from './NotFoundPage';
 import { SignUpPage } from './SignUpPage';
 
+
+const rollbarConfig = {
+  accessToken: process.env.REACT_APP_ROLLBAR_ACCESS_TOKEN,
+  environment: 'testenv',
+}
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -41,7 +47,11 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
-      {children}
+      <Provider config={rollbarConfig}> 
+        <ErrorBoundary >
+          {children}
+        </ErrorBoundary> 
+      </Provider>
     </AuthContext.Provider>
   );
 };
