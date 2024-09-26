@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -33,6 +33,7 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem('username');
     setLoggedIn(false);
   };
+
   useEffect(() => {
     const userId = localStorage.getItem('userId');
     if (userId) {
@@ -44,8 +45,10 @@ const AuthProvider = ({ children }) => {
     }
   }, [error]);
 
+  const contextValue = useMemo(() => ({ loggedIn, logIn, logOut }), [loggedIn]);
+
   return (
-    <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
+    <AuthContext.Provider value={contextValue}>
       <Provider config={rollbarConfig}>
         <ErrorBoundary>
           {children}
@@ -55,35 +58,31 @@ const AuthProvider = ({ children }) => {
   );
 };
 
+const AuthButton = () => {
+  const { t } = useTranslation();
+  const auth = useAuth();
+
+  return auth.loggedIn ? (
+    <Button onClick={auth.logOut}>{t('navbar.logOutBtn')}</Button>
+  ) : null;
+};
+
 const PrivateRoute = ({ children }) => {
   const auth = useAuth();
   const location = useLocation();
 
-  return (
-    auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />
-  );
+  return auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />;
 };
 
 const LoginRoute = ({ children }) => {
   const auth = useAuth();
   const location = useLocation();
 
-  return (
-    auth.loggedIn ? <Navigate to="/" state={{ from: location }} /> : children
-  );
+  return auth.loggedIn ? <Navigate to="/" state={{ from: location }} /> : children;
 };
 
 const App = () => {
   const { t } = useTranslation();
-  const AuthButton = () => {
-    const auth = useAuth();
-
-    return (
-      auth.loggedIn
-        ? <Button onClick={auth.logOut}>{t('navbar.logOutBtn')}</Button>
-        : null
-    );
-  };
 
   return (
     <AuthProvider>
