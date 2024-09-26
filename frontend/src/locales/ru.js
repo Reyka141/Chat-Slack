@@ -32,6 +32,7 @@ export default {
     },
     homePage: {
       heading: 'Каналы',
+      channelСontrolBtn: 'Управление каналом',
       loading: 'Загрузка',
       prefix: '#',
       remove: 'Удалить',
