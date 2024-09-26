@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useFormik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import socket from '../socket';
 import { getMessages, addMessage } from '../services/messagesApi';
 
 export const MessageBox = ({ activeChannel, channels }) => {
   const { t } = useTranslation();
-  const { data, isLoading, refetch } = getMessages();
+  const { data, isLoading, refetch, error } = getMessages();
   const [messages, setMessages] = useState([]);
   const inputEl = useRef();
   const messagesEndRef = useRef();
@@ -16,6 +17,19 @@ export const MessageBox = ({ activeChannel, channels }) => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView();
   };
+
+  const notifyError = (type) => {
+    switch (type) {
+      case 'FETCH_ERROR': 
+        return toast.error(t('toasts.fetchError'));
+      default:
+        return toast.error(t('toasts.otherError'));
+    }
+  };
+  
+  if (error) {
+    notifyError(error.status);
+  }
 
   useEffect(() => {
     refetch();
