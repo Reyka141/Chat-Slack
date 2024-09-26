@@ -19,12 +19,14 @@ const renderModal = ({
     return null;
   }
   const Component = getModal(modalInfo.type);
-  return <Component 
-    modalInfo={modalInfo} 
-    onHide={hideModal} 
-    channels={channels} 
-    setActiveChannel={setActiveChannel} 
-  />;
+  return (
+    <Component
+      modalInfo={modalInfo}
+      onHide={hideModal}
+      channels={channels}
+      setActiveChannel={setActiveChannel}
+    />
+  );
 };
 
 const defaultChannel = { id: '1', name: 'general' };
@@ -33,7 +35,7 @@ filter.add(filter.getDictionary('en'));
 filter.add(filter.getDictionary('fr'));
 filter.add(filter.getDictionary('ru'));
 
-export default HomePage = () => {
+const HomePage = () => {
   const [activeChannel, setActiveChannel] = useState(defaultChannel);
   const [channels, setChannels] = useState([]);
   const { data, isLoading, error } = getChannels();
@@ -169,3 +171,5 @@ export default HomePage = () => {
 
   );
 };
+
+export default HomePage;

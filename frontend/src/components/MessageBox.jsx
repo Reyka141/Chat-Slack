@@ -12,7 +12,7 @@ filter.add(filter.getDictionary('en'));
 filter.add(filter.getDictionary('fr'));
 filter.add(filter.getDictionary('ru'));
 
-export default MessageBox = ({ activeChannel, channels }) => {
+const MessageBox = ({ activeChannel, channels }) => {
   const { t } = useTranslation();
   const {
     data, isLoading, refetch, error,
@@ -145,3 +145,5 @@ export default MessageBox = ({ activeChannel, channels }) => {
     </div>
   );
 };
+
+export default MessageBox;

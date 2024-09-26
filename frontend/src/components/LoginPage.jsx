@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import useAuth from '../hooks/index.jsx';
 import { loginUser } from '../services/userApi.js';
 
-export default LoginPage = () => {
+const LoginPage = () => {
   const auth = useAuth();
   const [authFailed, setAuthFailed] = useState(false);
   const inputRef = useRef();
@@ -97,3 +97,5 @@ export default LoginPage = () => {
     </Container>
   );
 };
+
+export default LoginPage;

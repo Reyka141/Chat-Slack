@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-export default NotFoundPage = () => {
+const NotFoundPage = () => {
   const { t } = useTranslation();
 
   return (
@@ -13,3 +13,5 @@ export default NotFoundPage = () => {
     </div>
   );
 };
+
+export default NotFoundPage;

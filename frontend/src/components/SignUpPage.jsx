@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { signUpUser } from '../services/userApi.js';
 import useAuth from '../hooks/index.jsx';
 
-export default SignUpPage = () => {
+const SignUpPage = () => {
   const navigate = useNavigate();
   const [signUp] = signUpUser();
   const auth = useAuth();
@@ -131,3 +131,5 @@ export default SignUpPage = () => {
     </Container>
   );
 };
+
+export default SignUpPage;
