@@ -22,7 +22,6 @@ import { SignUpPage } from './SignUpPage';
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const { error } = getChannels();
-
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
     localStorage.removeItem('userId');
@@ -31,9 +30,12 @@ const AuthProvider = ({ children }) => {
   };
   useEffect(() => {
     const userId = localStorage.getItem('userId');
-    if (userId && !error) {
-      setLoggedIn(true);
-      
+    if (userId) {
+      if (!error) {
+        logIn();
+      } else {
+        logOut();
+      } 
     }
   }, [error]);
 
