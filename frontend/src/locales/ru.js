@@ -1,5 +1,3 @@
-import { NotFoundPage } from "../components/NotFoundPage";
-
 /* eslint-disable import/no-anonymous-default-export */
 export default {
   translation: {
@@ -74,6 +72,13 @@ export default {
           unique: 'Должно быть уникальным',
         },
       }
+    },
+    toasts: {
+      createChannel: 'Канал создан',
+      removeChannel: 'Канал удален',
+      renameChannel: 'Канал переименован',
+      fetchError: 'Ошибка сети',
+      otherError: 'Ошибка в загрузке данных',
     }
   },
 };
