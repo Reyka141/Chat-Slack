@@ -2,13 +2,29 @@ import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { removeChannel } from '../services/channelsApi.js';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 const Remove = (props) => {
   const { onHide, modalInfo: { item } } = props;
   const { t } = useTranslation();
   const [deleteChannel] = removeChannel();
-  const handleClick = () => {
-    deleteChannel(item);
+  const notify = () => toast.success(t('toasts.removeChannel'));
+  const notifyError = (type) => {
+    switch (type) {
+      case 'FETCH_ERROR': 
+        return toast.error(t('toasts.fetchError'));
+      default:
+        return toast.error(t('toasts.otherError'));
+    }
+  };
+  const handleClick = async () => {
+    try {
+      await deleteChannel(item).unwrap();
+      notify();
+    } catch (err) {
+      notifyError(err.status);
+    }
+    
     onHide();
   };
   return (
