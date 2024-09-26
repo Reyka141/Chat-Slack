@@ -6,8 +6,9 @@
   "main": "frontend/src/index.js",
   "scripts": {
     "build": "npm run build --prefix frontend",
-    "start": "start-server -s ./frontend/build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npx start-server -s ./frontend/build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "cd frontend && npm ci"
   },
   "author": "Andrii Veduta",
   "license": "ISC",
