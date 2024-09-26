@@ -33,7 +33,7 @@ filter.add(filter.getDictionary('en'));
 filter.add(filter.getDictionary('fr'));
 filter.add(filter.getDictionary('ru'));
 
-export const HomePage = () => {
+export default HomePage = () => {
   const [activeChannel, setActiveChannel] = useState(defaultChannel);
   const [channels, setChannels] = useState([]);
   const { data, isLoading, error } = getChannels();

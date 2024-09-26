@@ -14,10 +14,10 @@ import { getChannels } from '../services/channelsApi.js';
 import AuthContext from '../contexts/index.jsx';
 import useAuth from '../hooks/index.jsx';
 
-import { LoginPage } from './LoginPage';
-import { HomePage } from './HomePage';
-import { NotFoundPage } from './NotFoundPage';
-import { SignUpPage } from './SignUpPage';
+import LoginPage from './LoginPage';
+import HomePage from './HomePage';
+import NotFoundPage from './NotFoundPage';
+import SignUpPage from './SignUpPage';
 
 const rollbarConfig = {
   accessToken: process.env.REACT_APP_ROLLBAR_ACCESS_TOKEN,
