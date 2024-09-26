@@ -4,11 +4,26 @@ import { Modal, Form, Button } from 'react-bootstrap';
 import * as Yup from 'yup';
 import { addChannel } from '../services/channelsApi.js';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
-const generateOnSubmit = ({ onHide, setActiveChannel }, sendChannel,) => async (values) => {
+const generateOnSubmit = ({ onHide, setActiveChannel }, sendChannel, t) => async (values) => {
   const newChannel  = { name: values.name };
-  const { id, name } = await sendChannel(newChannel).unwrap();
-  setActiveChannel({ id, name });
+  const notifySuccess = () => toast.success(t('toasts.createChannel'));
+  const notifyError = (type) => {
+    switch (type) {
+      case 'FETCH_ERROR': 
+        return toast.error(t('toasts.fetchError'));
+      default:
+        return toast.error(t('toasts.otherError'));
+    }
+  };
+  try {
+    const { id, name } = await sendChannel(newChannel).unwrap();
+    setActiveChannel({ id, name });
+    notifySuccess();
+  } catch (err) {
+    notifyError(err.status);
+  }
   onHide();
 };
 
@@ -25,12 +40,12 @@ const Add = (props) => {
       .max(20, t('modal.errors.validation.minMax'))
       .required(t('modal.errors.validation.required'))
       .test('is-unique', t('modal.errors.validation.unique'), function (value) {
-        return !channelsName.includes(value); // Проверка на дублирование
+        return !channelsName.includes(value);
       }),
   });
 
   const f = useFormik({ 
-    onSubmit: generateOnSubmit(props, sendChannel),
+    onSubmit: generateOnSubmit(props, sendChannel, t),
     validationSchema: channelSchema,
     initialValues: { name: '' } });
 
