@@ -17,6 +17,7 @@ import { LoginPage } from './LoginPage';
 import { HomePage } from './HomePage';
 import { NotFoundPage } from './NotFoundPage';
 import { SignUpPage } from './SignUpPage';
+import { array } from 'yup';
 
 
 const AuthProvider = ({ children }) => {
@@ -66,6 +67,7 @@ const LoginRoute = ({ children }) => {
 
 const App = () => {
   const { t } = useTranslation();
+  asd.map();
   const AuthButton = () => {
     const auth = useAuth();
   
