@@ -4,12 +4,27 @@ import { Modal, Form, Button } from 'react-bootstrap';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { renameChannel } from '../services/channelsApi.js';
+import { toast } from 'react-toastify';
 
 
 
-const generateOnSubmit = ({ onHide }, sendChannel, item) => (values) => {
+const generateOnSubmit = ({ onHide }, changeChannel, item, t) => async (values) => {
   const newChannel  = { name: values.name, id: item };
-  sendChannel(newChannel);
+  const notify = () => toast.success(t('toasts.renameChannel'));
+  const notifyError = (type) => {
+    switch (type) {
+      case 'FETCH_ERROR': 
+        return toast.error(t('toasts.fetchError'));
+      default:
+        return toast.error(t('toasts.otherError'));
+    }
+  };
+  try {
+    await changeChannel(newChannel).unwrap();
+    notify();
+  } catch (err) {
+    notifyError(err.status);
+  }
   onHide();
 };
 
@@ -19,6 +34,7 @@ const Rename = (props) => {
   const channelsName = channels.map(({ name }) => name);
   const { name } = channels.find(({ id }) => id === item);
   const { t } = useTranslation();
+  
   
   const channelSchema = Yup.object().shape({
     name: Yup.string()
@@ -32,7 +48,7 @@ const Rename = (props) => {
   });
 
   const f = useFormik({ 
-    onSubmit: generateOnSubmit(props, changeChannel, item),
+    onSubmit: generateOnSubmit(props, changeChannel, item, t),
     validationSchema: channelSchema,
     initialValues: { name } 
   });
