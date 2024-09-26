@@ -9,21 +9,20 @@ import {
 } from 'react-router-dom';
 import { Button, Navbar, Container } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { Provider, ErrorBoundary } from '@rollbar/react';
 import { getChannels } from '../services/channelsApi.js';
 import AuthContext from '../contexts/index.jsx';
 import useAuth from '../hooks/index.jsx';
-import { Provider, ErrorBoundary } from '@rollbar/react';
 
 import { LoginPage } from './LoginPage';
 import { HomePage } from './HomePage';
 import { NotFoundPage } from './NotFoundPage';
 import { SignUpPage } from './SignUpPage';
 
-
 const rollbarConfig = {
   accessToken: process.env.REACT_APP_ROLLBAR_ACCESS_TOKEN,
   environment: 'testenv',
-}
+};
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -41,16 +40,16 @@ const AuthProvider = ({ children }) => {
         logIn();
       } else {
         logOut();
-      } 
+      }
     }
   }, [error]);
 
   return (
     <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
-      <Provider config={rollbarConfig}> 
-        <ErrorBoundary >
+      <Provider config={rollbarConfig}>
+        <ErrorBoundary>
           {children}
-        </ErrorBoundary> 
+        </ErrorBoundary>
       </Provider>
     </AuthContext.Provider>
   );
@@ -78,7 +77,7 @@ const App = () => {
   const { t } = useTranslation();
   const AuthButton = () => {
     const auth = useAuth();
-  
+
     return (
       auth.loggedIn
         ? <Button onClick={auth.logOut}>{t('navbar.logOutBtn')}</Button>
@@ -89,36 +88,44 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
-      <div className='d-flex flex-column h-100'>
-        <Navbar bg="white" expand="lg" className='shadow-sm'>
-          <Container>
-            <Navbar.Brand as={Link} to="/">{t('navbar.homeLink')}</Navbar.Brand>
-            <AuthButton />
-          </Container>
-        </Navbar>
+        <div className="d-flex flex-column h-100">
+          <Navbar bg="white" expand="lg" className="shadow-sm">
+            <Container>
+              <Navbar.Brand as={Link} to="/">{t('navbar.homeLink')}</Navbar.Brand>
+              <AuthButton />
+            </Container>
+          </Navbar>
           <Routes>
-            <Route path="/" element={(
+            <Route
+              path="/"
+              element={(
                 <PrivateRoute>
                   <HomePage />
                 </PrivateRoute>
-              )} 
+              )}
             />
-            <Route path="/login" element={(
+            <Route
+              path="/login"
+              element={(
                 <LoginRoute>
                   <LoginPage />
                 </LoginRoute>
-              )}  />
-              <Route path="/signup" element={(
+              )}
+            />
+            <Route
+              path="/signup"
+              element={(
                 <LoginRoute>
                   <SignUpPage />
                 </LoginRoute>
-              )}  />
+              )}
+            />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
       </Router>
     </AuthProvider>
   );
-}
+};
 
 export default App;

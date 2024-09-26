@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const channelsApi = createApi({
   reducerPath: 'tasks',
-  baseQuery: fetchBaseQuery({ 
+  baseQuery: fetchBaseQuery({
     baseUrl: '/api/v1/channels',
     prepareHeaders: (headers) => {
       const token = localStorage.getItem('userId'); // Получаем токен из localStorage при каждом запросе
@@ -14,7 +14,7 @@ export const channelsApi = createApi({
 
       return headers; // Возвращаем изменённые заголовки
     },
-   }),
+  }),
   endpoints: (builder) => ({
     getChannels: builder.query({
       query: () => '',

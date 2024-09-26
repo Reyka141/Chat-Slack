@@ -3,7 +3,7 @@ export default {
   translation: {
     languages: {
       ru: 'Русский',
-    },    
+    },
     loginAndSignUp: {
       heading: 'Войти',
       headingSignUp: 'Регистрация',
@@ -24,7 +24,7 @@ export default {
           wrongData: 'Неверные имя пользователя или пароль',
           status409: 'Такой пользователь уже существует',
         },
-      }
+      },
     },
     navbar: {
       homeLink: 'Hexlet Chat',
@@ -44,9 +44,9 @@ export default {
         keyWithCount_many: '{{count}} сообщений', // для 5 и больше
         keyWithCount_other: '{{count}} сообщений', // 0, 5...
       },
-      sendMessageBtn:'Отправить',
+      sendMessageBtn: 'Отправить',
     },
-    notFoundPage:{
+    notFoundPage: {
       header: '404 - Страница не найдена',
       body: 'Извините, страница, которую вы ищете, не существует.',
       btn: 'Вернуться на главную',
@@ -56,7 +56,7 @@ export default {
       cancelBtn: 'Отменить',
       name: 'Имя канала',
       add: {
-        header: 'Добовить канал',  
+        header: 'Добовить канал',
       },
       remove: {
         header: 'Удалить канал',
@@ -72,7 +72,7 @@ export default {
           minMax: 'От 3 до 20 символов',
           unique: 'Должно быть уникальным',
         },
-      }
+      },
     },
     toasts: {
       createChannel: 'Канал создан',
@@ -80,6 +80,6 @@ export default {
       renameChannel: 'Канал переименован',
       fetchError: 'Ошибка сети',
       otherError: 'Ошибка в загрузке данных',
-    }
+    },
   },
 };

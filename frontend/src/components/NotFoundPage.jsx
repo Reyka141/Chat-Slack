@@ -6,10 +6,10 @@ export const NotFoundPage = () => {
   const { t } = useTranslation();
 
   return (
-    <div className='text-center'>
+    <div className="text-center">
       <h1>{t('notFoundPage.header')}</h1>
       <p>{t('notFoundPage.body')}</p>
       <Link to="/">{t('notFoundPage.btn')}</Link>
     </div>
   );
-}
+};

@@ -2,16 +2,16 @@ import React, { useEffect, useRef } from 'react';
 import { useFormik } from 'formik';
 import { Modal, Form, Button } from 'react-bootstrap';
 import * as Yup from 'yup';
-import { addChannel } from '../services/channelsApi.js';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { addChannel } from '../services/channelsApi.js';
 
 const generateOnSubmit = ({ onHide, setActiveChannel }, sendChannel, t) => async (values) => {
-  const newChannel  = { name: values.name };
+  const newChannel = { name: values.name };
   const notifySuccess = () => toast.success(t('toasts.createChannel'));
   const notifyError = (type) => {
     switch (type) {
-      case 'FETCH_ERROR': 
+      case 'FETCH_ERROR':
         return toast.error(t('toasts.fetchError'));
       default:
         return toast.error(t('toasts.otherError'));
@@ -42,15 +42,14 @@ const Add = (props) => {
       .min(3, t('modal.errors.validation.minMax'))
       .max(20, t('modal.errors.validation.minMax'))
       .required(t('modal.errors.validation.required'))
-      .test('is-unique', t('modal.errors.validation.unique'), function (value) {
-        return !channelsName.includes(value);
-      }),
+      .test('is-unique', t('modal.errors.validation.unique'), (value) => !channelsName.includes(value)),
   });
 
-  const f = useFormik({ 
+  const f = useFormik({
     onSubmit: generateOnSubmit(props, sendChannel, t),
     validationSchema: channelSchema,
-    initialValues: { name: '' } });
+    initialValues: { name: '' },
+  });
 
   const inputRef = useRef();
   useEffect(() => {
@@ -70,20 +69,20 @@ const Add = (props) => {
               autoComplete="off"
               required
               ref={inputRef}
-              type='input'
+              type="input"
               onChange={f.handleChange}
               onBlur={f.handleBlur}
               value={f.values.name}
               name="name"
-              id='name'
+              id="name"
               className={`mb-2 ${f.errors.name && 'is-invalid'}`}
             />
-            <Form.Label className='visually-hidden' htmlFor='name'>{t('modal.name')}</Form.Label>
+            <Form.Label className="visually-hidden" htmlFor="name">{t('modal.name')}</Form.Label>
             <Form.Control.Feedback type="invalid">{f.errors.name}</Form.Control.Feedback>
           </Form.Group>
-          <Form.Group className='d-flex justify-content-end'>
-            <Button type='button' variant='secondary' onClick={onHide} className='me-2'>{t('modal.cancelBtn')}</Button>
-            <Button type='submit'>{t('modal.submitBtn')}</Button>
+          <Form.Group className="d-flex justify-content-end">
+            <Button type="button" variant="secondary" onClick={onHide} className="me-2">{t('modal.cancelBtn')}</Button>
+            <Button type="submit">{t('modal.submitBtn')}</Button>
           </Form.Group>
         </form>
       </Modal.Body>

@@ -1,16 +1,20 @@
-import React, { useState, useEffect, useRef} from 'react';
-import { Button, Container, Row, Col, Nav, Dropdown, ButtonGroup  } from 'react-bootstrap';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  Button, Container, Row, Col, Nav, Dropdown, ButtonGroup,
+} from 'react-bootstrap';
 import update from 'immutability-helper';
 import { useTranslation } from 'react-i18next';
 import { ToastContainer, toast } from 'react-toastify';
 import filter from 'leo-profanity';
 
 import { getChannels } from '../services/channelsApi.js';
-import { MessageBox } from './MessageBox.jsx'
+import { MessageBox } from './MessageBox.jsx';
 import getModal from '../modals/index.js';
 import socket from '../socket';
 
-const renderModal = ({ modalInfo, hideModal, channels, setActiveChannel }) => {
+const renderModal = ({
+  modalInfo, hideModal, channels, setActiveChannel,
+}) => {
   if (!modalInfo.type) {
     return null;
   }
@@ -24,8 +28,6 @@ filter.add(filter.getDictionary('en'));
 filter.add(filter.getDictionary('fr'));
 filter.add(filter.getDictionary('ru'));
 
-
-
 export const HomePage = () => {
   const [activeChannel, setActiveChannel] = useState(defaultChannel);
   const [channels, setChannels] = useState([]);
@@ -38,7 +40,7 @@ export const HomePage = () => {
 
   const notifyError = (type) => {
     switch (type) {
-      case 'FETCH_ERROR': 
+      case 'FETCH_ERROR':
         return toast.error(t('toasts.fetchError'));
       default:
         return toast.error(t('toasts.otherError'));
@@ -50,7 +52,7 @@ export const HomePage = () => {
       notifyError(error.status);
     }
   }, [error]);
- 
+
   const scrollToBottom = () => {
     lastCreatChannel.current?.scrollIntoView();
   };
@@ -69,7 +71,6 @@ export const HomePage = () => {
     if (channels[channels.length - 1]?.id === activeChannel.id) {
       scrollToBottom();
     }
-    
   }, [channels, activeChannel]);
 
   useEffect(() => {
@@ -79,7 +80,7 @@ export const HomePage = () => {
     });
 
     socket.on('removeChannel', (message) => {
-      setChannels((prevMessages) => prevMessages.filter(({ id }) => id !== message.id )); 
+      setChannels((prevMessages) => prevMessages.filter(({ id }) => id !== message.id));
     });
 
     socket.on('renameChannel', (message) => {
@@ -99,21 +100,21 @@ export const HomePage = () => {
       socket.off('renameChannel');
     };
   }, []);
-  
+
   if (isLoading) {
     return <div>{t('homePage.loading')}</div>;
   }
   const renderChannels = ({ id, name, removable }, index, array) => {
     if (removable) {
       return (
-        <Nav.Item as="li" key={id} className='w-100'>
-          <Dropdown as={ButtonGroup} className='d-flex'>
-            <Button variant={id === activeChannel.id ? 'secondary' : ''} className='w-100 rounded-0 text-start text-truncate' onClick={() => setActiveChannel({ id, name })}>
-              {index === array.length - 1 ? <span className='me-1' ref={lastCreatChannel}>{t('homePage.prefix')}</span> : <span className='me-1'>{t('homePage.prefix')}</span>}
+        <Nav.Item as="li" key={id} className="w-100">
+          <Dropdown as={ButtonGroup} className="d-flex">
+            <Button variant={id === activeChannel.id ? 'secondary' : ''} className="w-100 rounded-0 text-start text-truncate" onClick={() => setActiveChannel({ id, name })}>
+              {index === array.length - 1 ? <span className="me-1" ref={lastCreatChannel}>{t('homePage.prefix')}</span> : <span className="me-1">{t('homePage.prefix')}</span>}
               {filter.clean(name)}
             </Button>
-            <Dropdown.Toggle split as='button' type='button' className={`flex-grow-0 btn ${id === activeChannel.id && 'btn-secondary'}`} id="dropdown-custom-2">
-              <span className='visually-hidden'>{t('homePage.channelСontrolBtn')}</span>
+            <Dropdown.Toggle split as="button" type="button" className={`flex-grow-0 btn ${id === activeChannel.id && 'btn-secondary'}`} id="dropdown-custom-2">
+              <span className="visually-hidden">{t('homePage.channelСontrolBtn')}</span>
             </Dropdown.Toggle>
             <Dropdown.Menu className="">
               <Dropdown.Item onClick={() => showModal('removing', id)}>{t('homePage.remove')}</Dropdown.Item>
@@ -124,41 +125,42 @@ export const HomePage = () => {
       );
     }
     return (
-      <Nav.Item as="li" key={id} className='w-100'>
-        <Button variant={id === activeChannel.id ? 'secondary' : ''} className='w-100 rounded-0 text-start' onClick={() => setActiveChannel({ id, name })}>
-          <span className='me-1'>{t('homePage.prefix')}</span>
+      <Nav.Item as="li" key={id} className="w-100">
+        <Button variant={id === activeChannel.id ? 'secondary' : ''} className="w-100 rounded-0 text-start" onClick={() => setActiveChannel({ id, name })}>
+          <span className="me-1">{t('homePage.prefix')}</span>
           {name}
         </Button>
       </Nav.Item>
     );
   };
-    
 
   return (
-    <Container className='h-100 my-4 shadow rounded overflow-hidden'>
-      <Row className='h-100 bg-white flex-md-row'>
-        <Col bsPrefix='col-4' className='col-md-2 border-end px-0 bg-light flex-column h-100 d-flex'>
-          <div className='d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4'>
+    <Container className="h-100 my-4 shadow rounded overflow-hidden">
+      <Row className="h-100 bg-white flex-md-row">
+        <Col bsPrefix="col-4" className="col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
+          <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
             <b>{t('homePage.heading')}</b>
-            <Button variant="group-vertical" className='p-0 text-primary' onClick={() => showModal('adding')}>
+            <Button variant="group-vertical" className="p-0 text-primary" onClick={() => showModal('adding')}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="currentColor">
                 <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
                 <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
               </svg>
-              <span className='visually-hidden'>{t('homePage.addChannelBtn')}</span>
+              <span className="visually-hidden">{t('homePage.addChannelBtn')}</span>
             </Button>
-            {renderModal({ modalInfo, hideModal, channels, setActiveChannel })}
+            {renderModal({
+              modalInfo, hideModal, channels, setActiveChannel,
+            })}
           </div>
-          <Nav as='ul' id='channels-box' className='flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block'>
+          <Nav as="ul" id="channels-box" className="flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
             {channels.map(renderChannels)}
           </Nav>
         </Col>
-        <Col className='p-0 h-100'>
+        <Col className="p-0 h-100">
           <MessageBox activeChannel={activeChannel} channels={channels} />
         </Col>
       </Row>
       <ToastContainer closeOnClick />
     </Container>
-    
+
   );
-}
+};
