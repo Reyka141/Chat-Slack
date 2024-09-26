@@ -3,6 +3,7 @@ import { Button, Container, Row, Col, Nav, Dropdown, ButtonGroup  } from 'react-
 import update from 'immutability-helper';
 import { useTranslation } from 'react-i18next';
 import { ToastContainer, toast } from 'react-toastify';
+import filter from 'leo-profanity';
 
 import { getChannels } from '../services/channelsApi.js';
 import { MessageBox } from './MessageBox.jsx'
@@ -18,6 +19,10 @@ const renderModal = ({ modalInfo, hideModal, channels, setActiveChannel }) => {
 };
 
 const defaultChannel = { id: '1', name: 'general' };
+filter.clearList();
+filter.add(filter.getDictionary('en'));
+filter.add(filter.getDictionary('fr'));
+filter.add(filter.getDictionary('ru'));
 
 
 
@@ -42,7 +47,6 @@ export const HomePage = () => {
 
   useEffect(() => {
     if (error) {
-      console.log(error);
       notifyError(error.status);
     }
   }, [error]);
@@ -106,9 +110,9 @@ export const HomePage = () => {
           <Dropdown as={ButtonGroup} className='d-flex'>
             <Button variant={id === activeChannel.id ? 'secondary' : ''} className='w-100 rounded-0 text-start text-truncate' onClick={() => setActiveChannel({ id, name })}>
               {index === array.length - 1 ? <span className='me-1' ref={lastCreatChannel}>{t('homePage.prefix')}</span> : <span className='me-1'>{t('homePage.prefix')}</span>}
-              {name}
+              {filter.clean(name)}
             </Button>
-            <Dropdown.Toggle split as='button' type='button' className='flex-grow-0 btn' id="dropdown-custom-2" />
+            <Dropdown.Toggle split as='button' type='button' className={`flex-grow-0 btn ${id === activeChannel.id && 'btn-secondary'}`} id="dropdown-custom-2" />
             <Dropdown.Menu className="">
               <Dropdown.Item onClick={() => showModal('removing', id)}>{t('homePage.remove')}</Dropdown.Item>
               <Dropdown.Item onClick={() => showModal('renaming', id)}>{t('homePage.rename')}</Dropdown.Item>
