@@ -5,6 +5,12 @@ import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { renameChannel } from '../services/channelsApi.js';
 import { toast } from 'react-toastify';
+import filter from 'leo-profanity';
+
+filter.clearList();
+filter.add(filter.getDictionary('en'));
+filter.add(filter.getDictionary('fr'));
+filter.add(filter.getDictionary('ru'));
 
 
 
@@ -53,7 +59,7 @@ const Rename = (props) => {
   const f = useFormik({ 
     onSubmit: generateOnSubmit(props, changeChannel, item, t),
     validationSchema: channelSchema,
-    initialValues: { name } 
+    initialValues: { name: filter.clean(name) } 
   });
 
   const inputRename = useRef();
