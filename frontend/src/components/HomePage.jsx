@@ -112,7 +112,9 @@ export const HomePage = () => {
               {index === array.length - 1 ? <span className='me-1' ref={lastCreatChannel}>{t('homePage.prefix')}</span> : <span className='me-1'>{t('homePage.prefix')}</span>}
               {filter.clean(name)}
             </Button>
-            <Dropdown.Toggle split as='button' type='button' className={`flex-grow-0 btn ${id === activeChannel.id && 'btn-secondary'}`} id="dropdown-custom-2" />
+            <Dropdown.Toggle split as='button' type='button' className={`flex-grow-0 btn ${id === activeChannel.id && 'btn-secondary'}`} id="dropdown-custom-2">
+              <span className='visually-hidden'>{t('homePage.channelСontrolBtn')}</span>
+            </Dropdown.Toggle>
             <Dropdown.Menu className="">
               <Dropdown.Item onClick={() => showModal('removing', id)}>{t('homePage.remove')}</Dropdown.Item>
               <Dropdown.Item onClick={() => showModal('renaming', id)}>{t('homePage.rename')}</Dropdown.Item>
