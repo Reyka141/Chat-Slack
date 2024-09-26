@@ -8,7 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import filter from 'leo-profanity';
 
 import { getChannels } from '../services/channelsApi.js';
-import { MessageBox } from './MessageBox.jsx';
+import MessageBox from './MessageBox.jsx';
 import getModal from '../modals/index.js';
 import socket from '../socket';
 
