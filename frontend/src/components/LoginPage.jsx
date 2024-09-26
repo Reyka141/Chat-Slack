@@ -60,7 +60,7 @@ export const LoginPage = () => {
                     value={formik.values.username}
                     isInvalid={authFailed}
                   />
-                  <Form.Label>{t('loginAndSignUp.username')}</Form.Label>
+                  <Form.Label htmlFor='username'>{t('loginAndSignUp.username')}</Form.Label>
                 </Form.Floating>
 
                 <Form.Floating className="mb-3">
@@ -74,7 +74,7 @@ export const LoginPage = () => {
                       value={formik.values.password}
                       isInvalid={authFailed}
                   />
-                  <Form.Label>{t('loginAndSignUp.password')}</Form.Label>
+                  <Form.Label htmlFor='password'>{t('loginAndSignUp.password')}</Form.Label>
                   <Form.Control.Feedback type="invalid">
                   {t('loginAndSignUp.errors.validation.wrongData')}
                   </Form.Control.Feedback>
