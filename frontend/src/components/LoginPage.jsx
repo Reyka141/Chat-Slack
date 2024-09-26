@@ -54,6 +54,7 @@ export const LoginPage = () => {
                     placeholder="Ваш ник" 
                     id="username"
                     name="username"
+                    required
                     ref={inputRef}
                     onChange={formik.handleChange}
                     value={formik.values.username}
@@ -68,6 +69,7 @@ export const LoginPage = () => {
                       id="password"
                       placeholder="Пароль"
                       name="password"
+                      required
                       onChange={formik.handleChange}
                       value={formik.values.password}
                       isInvalid={authFailed}
