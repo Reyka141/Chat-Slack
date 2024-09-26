@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef} from 'react';
 import { Button, Container, Row, Col, Nav, Dropdown, ButtonGroup  } from 'react-bootstrap';
 import update from 'immutability-helper';
 import { useTranslation } from 'react-i18next';
+import { ToastContainer, toast } from 'react-toastify';
 
 import { getChannels } from '../services/channelsApi.js';
 import { MessageBox } from './MessageBox.jsx'
@@ -18,16 +19,34 @@ const renderModal = ({ modalInfo, hideModal, channels, setActiveChannel }) => {
 
 const defaultChannel = { id: '1', name: 'general' };
 
+
+
 export const HomePage = () => {
   const [activeChannel, setActiveChannel] = useState(defaultChannel);
   const [channels, setChannels] = useState([]);
-  const { data, isLoading } = getChannels();
+  const { data, isLoading, error } = getChannels();
   const [modalInfo, setModalInfo] = useState({ type: null, item: null });
   const hideModal = () => setModalInfo({ type: null, item: null });
   const showModal = (type, item = null) => setModalInfo({ type, item });
   const lastCreatChannel = useRef();
   const { t } = useTranslation();
 
+  const notifyError = (type) => {
+    switch (type) {
+      case 'FETCH_ERROR': 
+        return toast.error(t('toasts.fetchError'));
+      default:
+        return toast.error(t('toasts.otherError'));
+    }
+  };
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      notifyError(error.status);
+    }
+  }, [error]);
+ 
   const scrollToBottom = () => {
     lastCreatChannel.current?.scrollIntoView();
   };
@@ -132,6 +151,8 @@ export const HomePage = () => {
           <MessageBox activeChannel={activeChannel} channels={channels} />
         </Col>
       </Row>
+      <ToastContainer closeOnClick />
     </Container>
+    
   );
 }
