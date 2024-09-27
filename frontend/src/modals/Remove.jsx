@@ -2,12 +2,12 @@ import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { removeChannel } from '../services/channelsApi.js';
+import { useRemoveChannelMutation } from '../services/channelsApi.js';
 
 const Remove = (props) => {
   const { onHide, modalInfo: { item } } = props;
   const { t } = useTranslation();
-  const [deleteChannel] = removeChannel();
+  const [deleteChannel] = useRemoveChannelMutation();
   const notify = () => toast.success(t('toasts.removeChannel'));
   const notifyError = (type) => {
     switch (type) {
