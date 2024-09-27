@@ -22,25 +22,23 @@ const MessageBox = ({ activeChannel, channels }) => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView();
   };
+  useEffect(() => {
+    if (error) {
+      switch (error.status) {
+        case 'FETCH_ERROR':
+          toast.error(t('toasts.fetchError'));
+          break;
+        default:
+          toast.error(t('toasts.otherError'));
+      }
+    }
+  }, [error, t]);
 
   useEffect(() => {
     if (data) {
       dispatch(messagesActions.addMessages(data));
     }
   }, [data, dispatch]);
-
-  const notifyError = (type) => {
-    switch (type) {
-      case 'FETCH_ERROR':
-        return toast.error(t('toasts.fetchError'));
-      default:
-        return toast.error(t('toasts.otherError'));
-    }
-  };
-
-  if (error) {
-    notifyError(error.status);
-  }
 
   useEffect(() => {
     refetch();
