@@ -56,9 +56,6 @@ const LoginRoute = ({ children }) => {
 };
 
 const App = () => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-
   i18next
     .use(initReactI18next)
     .init({
@@ -68,6 +65,9 @@ const App = () => {
         escapeValue: false,
       },
     });
+
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     socket.on('newMessage', (message) => {
