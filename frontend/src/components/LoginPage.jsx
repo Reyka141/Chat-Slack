@@ -52,7 +52,7 @@ const LoginPage = () => {
                 <Form.Floating className="mb-3">
                   <Form.Control
                     type="username"
-                    placeholder="Ваш ник"
+                    placeholder={t('loginAndSignUp.username')}
                     id="username"
                     name="username"
                     required
@@ -68,7 +68,7 @@ const LoginPage = () => {
                   <Form.Control
                     type="password"
                     id="password"
-                    placeholder="Пароль"
+                    placeholder={t('loginAndSignUp.password')}
                     name="password"
                     required
                     onChange={formik.handleChange}
