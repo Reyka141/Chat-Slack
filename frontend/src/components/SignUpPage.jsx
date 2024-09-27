@@ -72,7 +72,7 @@ const SignUpPage = () => {
                   <Form.Control
                     type="username"
                     required
-                    placeholder="Имя пользователя"
+                    placeholder={t('loginAndSignUp.usernameSignUp')}
                     id="username"
                     name="username"
                     autoComplete="new-username"
@@ -90,7 +90,7 @@ const SignUpPage = () => {
                   <Form.Control
                     type="password"
                     id="password"
-                    placeholder="Пароль"
+                    placeholder={t('loginAndSignUp.password')}
                     name="password"
                     autoComplete="new-password"
                     disabled={formik.isSubmitting}
@@ -108,7 +108,7 @@ const SignUpPage = () => {
                   <Form.Control
                     type="password"
                     id="confirmPassword"
-                    placeholder="Подтердите пароль"
+                    placeholder={t('loginAndSignUp.confirmPassword')}
                     name="confirmPassword"
                     disabled={formik.isSubmitting}
                     onChange={formik.handleChange}
