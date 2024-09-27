@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -9,54 +9,39 @@ import {
 } from 'react-router-dom';
 import { Button, Navbar, Container } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { Provider, ErrorBoundary } from '@rollbar/react';
-import { getChannels } from '../services/channelsApi.js';
-import AuthContext from '../contexts/index.jsx';
+import socket from '../socket';
+import { actions as channelsActions } from '../services/channelsSlice.js';
+import { actions as messagesActions } from '../services/messagesSlice.js';
+import { useDispatch } from 'react-redux';
+
+import filter from 'leo-profanity';
+
 import useAuth from '../hooks/index.jsx';
+import AuthProvider from '../contexts/AuthProvider.jsx';
+
+import i18next from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import resources from '../locales/index.js';
 
 import LoginPage from './LoginPage';
 import HomePage from './HomePage';
 import NotFoundPage from './NotFoundPage';
 import SignUpPage from './SignUpPage';
 
-const rollbarConfig = {
-  accessToken: process.env.REACT_APP_ROLLBAR_ACCESS_TOKEN,
-  environment: 'testenv',
-};
+i18next
+  .use(initReactI18next)
+  .init({
+    resources,
+    fallbackLng: 'ru',
+    interpolation: {
+      escapeValue: false,
+    },
+  });
 
-const AuthProvider = ({ children }) => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const { error } = getChannels();
-  const logIn = () => setLoggedIn(true);
-  const logOut = () => {
-    localStorage.removeItem('userId');
-    localStorage.removeItem('username');
-    setLoggedIn(false);
-  };
-
-  useEffect(() => {
-    const userId = localStorage.getItem('userId');
-    if (userId) {
-      if (!error) {
-        logIn();
-      } else {
-        logOut();
-      }
-    }
-  }, [error]);
-
-  const contextValue = useMemo(() => ({ loggedIn, logIn, logOut }), [loggedIn]);
-
-  return (
-    <AuthContext.Provider value={contextValue}>
-      <Provider config={rollbarConfig}>
-        <ErrorBoundary>
-          {children}
-        </ErrorBoundary>
-      </Provider>
-    </AuthContext.Provider>
-  );
-};
+filter.clearList();
+filter.add(filter.getDictionary('en'));
+filter.add(filter.getDictionary('fr'));
+filter.add(filter.getDictionary('ru'));
 
 const AuthButton = () => {
   const { t } = useTranslation();
@@ -83,6 +68,36 @@ const LoginRoute = ({ children }) => {
 
 const App = () => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    socket.on('newMessage', (message) => {
+      dispatch(messagesActions.addMessage(message));
+    });
+
+    socket.on('newChannel', (message) => {
+      dispatch(channelsActions.addChannel(message));
+    });
+  
+    socket.on('removeChannel', (message) => {
+      dispatch(channelsActions.removeChannel(message));
+    });
+  
+    socket.on('renameChannel', (message) => {
+      const { id } = message;
+      dispatch(channelsActions.updateChannel({
+        id,
+        changes: message,
+      }))
+    });
+    
+    return () => {
+      socket.off('newMessage');
+      socket.off('newChannel');
+      socket.off('removeChannel');
+      socket.off('renameChannel');
+    };
+  }, []);
 
   return (
     <AuthProvider>
