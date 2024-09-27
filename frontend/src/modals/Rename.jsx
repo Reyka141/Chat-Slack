@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
-import { renameChannel } from '../services/channelsApi.js';
+import { useRenameChannelMutation } from '../services/channelsApi.js';
 
 filter.clearList();
 filter.add(filter.getDictionary('en'));
@@ -34,7 +34,7 @@ const generateOnSubmit = ({ onHide }, changeChannel, item, t) => async (values) 
 
 const Rename = (props) => {
   const { onHide, channels, modalInfo: { item } } = props;
-  const [changeChannel] = renameChannel();
+  const [changeChannel] = useRenameChannelMutation();
   const channelsName = channels.map(({ name }) => name);
   const { name } = channels.find(({ id }) => id === item);
   const { t } = useTranslation();
