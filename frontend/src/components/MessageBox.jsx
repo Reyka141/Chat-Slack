@@ -1,30 +1,34 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useFormik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import Spiner from './Spiner.jsx';
 import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
-import socket from '../socket';
-import { getMessages, addMessage } from '../services/messagesApi';
-
-filter.clearList();
-filter.add(filter.getDictionary('en'));
-filter.add(filter.getDictionary('fr'));
-filter.add(filter.getDictionary('ru'));
+import { useGetMessagesQuery, useAddMessageMutation } from '../services/messagesApi';
+import { useDispatch, useSelector } from 'react-redux';
+import { actions as messagesActions } from '../services/messagesSlice.js';
+import { selector as messagesSelector } from '../services/messagesSlice.js';
 
 const MessageBox = ({ activeChannel, channels }) => {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const {
     data, isLoading, refetch, error,
-  } = getMessages();
-  const [messages, setMessages] = useState([]);
+  } = useGetMessagesQuery();
   const inputEl = useRef();
   const messagesEndRef = useRef();
-  const [sendMessage] = addMessage();
-
+  const [sendMessage] = useAddMessageMutation();
+  const messages = useSelector((state) => messagesSelector.selectAll(state));
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView();
   };
+
+  useEffect(() => {
+    if (data) {
+      dispatch(messagesActions.addMessages(data));
+    }
+  }, [data, dispatch]);
 
   const notifyError = (type) => {
     switch (type) {
@@ -53,23 +57,6 @@ const MessageBox = ({ activeChannel, channels }) => {
     }
   }, [activeChannel, isLoading]);
 
-  useEffect(() => {
-    if (data) {
-      setMessages(data);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    // Обработчик получения сообщений от сервера
-    socket.on('newMessage', (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
-
-    return () => {
-      socket.off('newMessage');
-    };
-  }, []);
-
   const formik = useFormik({
     initialValues: {
       message: '',
@@ -84,7 +71,7 @@ const MessageBox = ({ activeChannel, channels }) => {
   });
 
   if (isLoading) {
-    return <div>{t('homePage.loading')}</div>;
+    return <Spiner/>;
   }
 
   const messagesFromChannel = messages.filter(({ channelId }) => channelId === activeChannel.id);
@@ -127,8 +114,8 @@ const MessageBox = ({ activeChannel, channels }) => {
               ref={inputEl}
               autoComplete="off"
               type="input"
-              aria-label="Новое сообщение"
-              placeholder="Введите сообщение..."
+              aria-label={t('homePage.inputLabel')}
+              placeholder={t('homePage.inputMessage')}
               id="message"
               name="message"
               className="border-0 p-0 ps-2"
