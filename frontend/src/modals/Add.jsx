@@ -4,7 +4,7 @@ import { Modal, Form, Button } from 'react-bootstrap';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { addChannel } from '../services/channelsApi.js';
+import { useAddChannelMutation } from '../services/channelsApi.js';
 
 const generateOnSubmit = ({ onHide, setActiveChannel }, sendChannel, t) => async (values) => {
   const newChannel = { name: values.name };
@@ -30,7 +30,7 @@ const generateOnSubmit = ({ onHide, setActiveChannel }, sendChannel, t) => async
 const Add = (props) => {
   const { onHide, channels } = props;
   const channelsName = channels.map(({ name }) => name);
-  const [sendChannel] = addChannel();
+  const [sendChannel] = useAddChannelMutation();
   const { t } = useTranslation();
 
   const channelSchema = Yup.object().shape({
