@@ -2,15 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Button, Container, Row, Col, Nav, Dropdown, ButtonGroup,
 } from 'react-bootstrap';
-import update from 'immutability-helper';
 import { useTranslation } from 'react-i18next';
 import { ToastContainer, toast } from 'react-toastify';
 import filter from 'leo-profanity';
+import { useDispatch, useSelector } from 'react-redux';
+import Spiner from './Spiner.jsx';
 
-import { getChannels } from '../services/channelsApi.js';
+import { useGetChannelsQuery } from '../services/channelsApi.js';
 import MessageBox from './MessageBox.jsx';
 import getModal from '../modals/index.js';
-import socket from '../socket';
+import { actions as channelsActions } from '../services/channelsSlice.js';
+import { selector as channelsSelectors } from '../services/channelsSlice.js';
 
 const renderModal = ({
   modalInfo, hideModal, channels, setActiveChannel,
@@ -30,35 +32,29 @@ const renderModal = ({
 };
 
 const defaultChannel = { id: '1', name: 'general' };
-filter.clearList();
-filter.add(filter.getDictionary('en'));
-filter.add(filter.getDictionary('fr'));
-filter.add(filter.getDictionary('ru'));
 
 const HomePage = () => {
+  const dispatch = useDispatch();
   const [activeChannel, setActiveChannel] = useState(defaultChannel);
-  const [channels, setChannels] = useState([]);
-  const { data, isLoading, error } = getChannels();
+  const { data, isLoading, error } = useGetChannelsQuery();
   const [modalInfo, setModalInfo] = useState({ type: null, item: null });
   const hideModal = () => setModalInfo({ type: null, item: null });
   const showModal = (type, item = null) => setModalInfo({ type, item });
   const lastCreatChannel = useRef();
   const { t } = useTranslation();
-
-  const notifyError = (type) => {
-    switch (type) {
-      case 'FETCH_ERROR':
-        return toast.error(t('toasts.fetchError'));
-      default:
-        return toast.error(t('toasts.otherError'));
-    }
-  };
+  const channels = useSelector((state) => channelsSelectors.selectAll(state));
 
   useEffect(() => {
     if (error) {
-      notifyError(error.status);
+      switch (error.status) {
+        case 'FETCH_ERROR':
+          toast.error(t('toasts.fetchError'));
+          break;
+        default:
+          toast.error(t('toasts.otherError'));
+      }
     }
-  }, [error]);
+  }, [error, t]);
 
   const scrollToBottom = () => {
     lastCreatChannel.current?.scrollIntoView();
@@ -66,9 +62,9 @@ const HomePage = () => {
 
   useEffect(() => {
     if (data) {
-      setChannels(data);
+      dispatch(channelsActions.addChannels(data));
     }
-  }, [data]);
+  }, [data, dispatch]);
 
   useEffect(() => {
     const itemIndex = channels.findIndex(({ id }) => id === activeChannel.id);
@@ -80,36 +76,8 @@ const HomePage = () => {
     }
   }, [channels, activeChannel]);
 
-  useEffect(() => {
-    // Обработчик получения сообщений от сервера
-    socket.on('newChannel', (message) => {
-      setChannels((prevMessages) => [...prevMessages, message]);
-    });
-
-    socket.on('removeChannel', (message) => {
-      setChannels((prevMessages) => prevMessages.filter(({ id }) => id !== message.id));
-    });
-
-    socket.on('renameChannel', (message) => {
-      const { id } = message;
-      setChannels((prevChannels) => {
-        const index = prevChannels.findIndex((channel) => id.toString() === channel.id);
-        if (index !== -1) {
-          return update(prevChannels, { [index]: { $set: message } });
-        }
-        return prevChannels;
-      });
-    });
-
-    return () => {
-      socket.off('newChannel');
-      socket.off('removeChannel');
-      socket.off('renameChannel');
-    };
-  }, []);
-
   if (isLoading) {
-    return <div>{t('homePage.loading')}</div>;
+    return <Spiner/>;
   }
   const renderChannels = ({ id, name, removable }, index, array) => {
     if (removable) {
