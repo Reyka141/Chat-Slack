@@ -27,16 +27,6 @@ import HomePage from './HomePage';
 import NotFoundPage from './NotFoundPage';
 import SignUpPage from './SignUpPage';
 
-i18next
-  .use(initReactI18next)
-  .init({
-    resources,
-    fallbackLng: 'ru',
-    interpolation: {
-      escapeValue: false,
-    },
-  });
-
 filter.clearList();
 filter.add(filter.getDictionary('en'));
 filter.add(filter.getDictionary('fr'));
@@ -68,6 +58,16 @@ const LoginRoute = ({ children }) => {
 const App = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+
+  i18next
+    .use(initReactI18next)
+    .init({
+      resources,
+      fallbackLng: 'ru',
+      interpolation: {
+        escapeValue: false,
+      },
+    });
 
   useEffect(() => {
     socket.on('newMessage', (message) => {
