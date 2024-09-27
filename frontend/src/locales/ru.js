@@ -45,6 +45,8 @@ export default {
         keyWithCount_other: '{{count}} сообщений', // 0, 5...
       },
       sendMessageBtn: 'Отправить',
+      inputMessage: 'Введите сообщение...',
+      inputLabel: 'Новое сообщение',
     },
     notFoundPage: {
       header: '404 - Страница не найдена',
