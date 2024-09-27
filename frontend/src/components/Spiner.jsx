@@ -1,4 +1,4 @@
-import { Container, Row, Spinner} from 'react-bootstrap';
+import { Container, Row, Spinner } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 const Spiner = () => {
@@ -12,6 +12,6 @@ const Spiner = () => {
       </Row>
     </Container>
   );
-}
+};
 
 export default Spiner;

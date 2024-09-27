@@ -17,8 +17,8 @@ const messagesSlice = createSlice({
       const { id } = action.payload;
       const restEntities = Object.values(state.entities).filter((e) => e.channelId !== id);
       messagesAdapter.setAll(state, restEntities);
-    })
-  }
+    });
+  },
 });
 
 export const { actions } = messagesSlice;

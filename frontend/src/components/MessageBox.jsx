@@ -2,13 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import { useFormik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import Spiner from './Spiner.jsx';
 import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
-import { useGetMessagesQuery, useAddMessageMutation } from '../services/messagesApi';
 import { useDispatch, useSelector } from 'react-redux';
-import { actions as messagesActions } from '../services/messagesSlice.js';
-import { selector as messagesSelector } from '../services/messagesSlice.js';
+import { useGetMessagesQuery, useAddMessageMutation } from '../services/messagesApi';
+import Spiner from './Spiner.jsx';
+import { actions as messagesActions, selector as messagesSelector } from '../services/messagesSlice.js';
 
 const MessageBox = ({ activeChannel, channels }) => {
   const dispatch = useDispatch();
@@ -71,7 +70,7 @@ const MessageBox = ({ activeChannel, channels }) => {
   });
 
   if (isLoading) {
-    return <Spiner/>;
+    return <Spiner />;
   }
 
   const messagesFromChannel = messages.filter(({ channelId }) => channelId === activeChannel.id);

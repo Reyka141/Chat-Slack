@@ -8,19 +8,18 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { Button, Navbar, Container } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import filter from 'leo-profanity';
+import i18next from 'i18next';
+import { initReactI18next, useTranslation } from 'react-i18next';
+
 import socket from '../socket';
 import { actions as channelsActions } from '../services/channelsSlice.js';
 import { actions as messagesActions } from '../services/messagesSlice.js';
-import { useDispatch } from 'react-redux';
-
-import filter from 'leo-profanity';
 
 import useAuth from '../hooks/index.jsx';
 import AuthProvider from '../contexts/AuthProvider.jsx';
 
-import i18next from 'i18next';
-import { initReactI18next } from 'react-i18next';
 import resources from '../locales/index.js';
 
 import LoginPage from './LoginPage';
@@ -74,30 +73,27 @@ const App = () => {
     socket.on('newMessage', (message) => {
       dispatch(messagesActions.addMessage(message));
     });
-
     socket.on('newChannel', (message) => {
       dispatch(channelsActions.addChannel(message));
     });
-  
     socket.on('removeChannel', (message) => {
       dispatch(channelsActions.removeChannel(message));
     });
-  
     socket.on('renameChannel', (message) => {
       const { id } = message;
       dispatch(channelsActions.updateChannel({
         id,
         changes: message,
-      }))
+      }));
     });
-    
+
     return () => {
       socket.off('newMessage');
       socket.off('newChannel');
       socket.off('removeChannel');
       socket.off('renameChannel');
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <AuthProvider>

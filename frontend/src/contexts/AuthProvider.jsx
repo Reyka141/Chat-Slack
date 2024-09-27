@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Provider, ErrorBoundary } from '@rollbar/react';
 import { useGetChannelsQuery } from '../services/channelsApi.js';
-import AuthContext from '../contexts/index.jsx';
+import AuthContext from './index.jsx';
 
 const rollbarConfig = {
   accessToken: process.env.REACT_APP_ROLLBAR_ACCESS_TOKEN,

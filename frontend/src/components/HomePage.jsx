@@ -11,8 +11,7 @@ import Spiner from './Spiner.jsx';
 import { useGetChannelsQuery } from '../services/channelsApi.js';
 import MessageBox from './MessageBox.jsx';
 import getModal from '../modals/index.js';
-import { actions as channelsActions } from '../services/channelsSlice.js';
-import { selector as channelsSelectors } from '../services/channelsSlice.js';
+import { actions as channelsActions, selector as channelsSelectors } from '../services/channelsSlice.js';
 
 const renderModal = ({
   modalInfo, hideModal, channels, setActiveChannel,
@@ -77,7 +76,7 @@ const HomePage = () => {
   }, [channels, activeChannel]);
 
   if (isLoading) {
-    return <Spiner/>;
+    return <Spiner />;
   }
   const renderChannels = ({ id, name, removable }, index, array) => {
     if (removable) {
